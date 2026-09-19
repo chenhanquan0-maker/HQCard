@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 钱包刷卡侦测：只订阅小米 TSM 客户端的窗口出现事件，不读内容、不收通知 -->
+<accessibility-service xmlns:android="http://schemas.android.com/apk/res/android"
+    android:accessibilityEventTypes="typeWindowStateChanged"
+    android:accessibilityFeedbackType="feedbackGeneric"
+    android:packageNames="com.miui.tsmclient"
+    android:notificationTimeout="50"
+    android:canRetrieveWindowContent="false"
+    android:description="@string/detector_service_desc" />

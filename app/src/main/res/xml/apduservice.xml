@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- HCE 卡模拟声明：注册本机虚拟卡 AID（与 com.hqcard.hce.EMULATED_AID 一致） -->
+<host-apdu-service xmlns:android="http://schemas.android.com/apk/res/android"
+    android:description="@string/hce_service_desc"
+    android:requireDeviceUnlock="false">
+    <aid-group
+        android:category="other"
+        android:description="@string/hce_aid_desc">
+        <aid-filter android:name="F04851434152443031" />
+    </aid-group>
+</host-apdu-service>

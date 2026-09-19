@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- 卡片轮廓 -->
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="4"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:fillColor="#00000000"
+        android:pathData="M44,52 h20 a6,6 0 0 1 6,6 v14 a6,6 0 0 1 -6,6 h-20 a6,6 0 0 1 -6,-6 v-14 a6,6 0 0 1 6,-6 z" />
+    <!-- NFC 波纹（由内向外三条弧线） -->
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="3.5"
+        android:strokeLineCap="round"
+        android:fillColor="#00000000"
+        android:pathData="M31,61 a6,6 0 0 1 0,8" />
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="3.5"
+        android:strokeLineCap="round"
+        android:fillColor="#00000000"
+        android:pathData="M25,55 a12,12 0 0 1 0,20" />
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="3.5"
+        android:strokeLineCap="round"
+        android:fillColor="#00000000"
+        android:pathData="M19,49 a18,18 0 0 1 0,32" />
+</vector>

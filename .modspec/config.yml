@@ -1,0 +1,39 @@
+framework: MMDD
+version: "1.0.0"
+
+# 目标平台配置
+target:
+  language: kotlin
+  kotlin_version: "2.0.21"
+  platform: android
+  min_sdk: 26
+  compile_sdk: 35
+  target_sdk: 35
+  build_system: gradle-kts
+  agp_version: "8.7.3"
+  gradle_version: "8.11.1"
+
+# 模块规范
+module:
+  contract_dir: docs        # 契约文件所在子目录
+  impl_dir: impl            # 物化代码所在子目录
+  required_files:
+    - docs/desc.md
+    - docs/interface.md
+    - docs/verify.md
+
+# 代码生成配置
+generation:
+  ai_provider: opencode     # 由 AI 根据 docs/ 契约物化 impl/ 代码
+  temperature: 0.2
+
+# 验证配置
+verification:
+  test_framework: junit4    # + robolectric(Room 内存库) + mockk
+  command: "gradlew.bat testDebugUnitTest"
+  coverage_threshold: 100   # verify.md checklist 覆盖率
+
+# 依赖解析
+dependency:
+  max_depth: 10
+  allow_cycles: false
