@@ -134,6 +134,55 @@ class SwipeEventRepositoryTest {
         assertEquals(listOf("A"), emissions[1].map { it.detail })
     }
 
+    // ---- observeRange ----
+
+    @Test
+    fun `observeRange returns only events inside the range`() = runTest {
+        repo.insert(1_000L, "A") // 区间外（早于下界）
+        repo.insert(2_000L, "B") // 区间内
+        repo.insert(3_000L, "C") // 区间内
+        repo.insert(4_000L, "D") // 区间外（晚于上界）
+        val list = repo.observeRange(2_000L, 4_000L).first()
+        assertEquals(listOf("C", "B"), list.map { it.detail })
+    }
+
+    @Test
+    fun `observeRange includes lower bound and excludes upper bound`() = runTest {
+        repo.insert(1_000L, "at-from")
+        repo.insert(2_000L, "at-to")
+        val list = repo.observeRange(1_000L, 2_000L).first()
+        assertEquals(listOf("at-from"), list.map { it.detail })
+    }
+
+    @Test
+    fun `observeRange emits empty list when no event in range`() = runTest {
+        repo.insert(1_000L, "A")
+        assertEquals(emptyList<SwipeEvent>(), repo.observeRange(2_000L, 3_000L).first())
+    }
+
+    @Test
+    fun `observeRange orders by swipedAt desc then id desc`() = runTest {
+        repo.insert(1_000L, "A")
+        repo.insert(3_000L, "B")
+        repo.insert(3_000L, "C") // 与 B 同毫秒，id 更大
+        repo.insert(2_000L, "D")
+        val list = repo.observeRange(0L, 4_000L).first()
+        assertEquals(listOf("C", "B", "D", "A"), list.map { it.detail })
+    }
+
+    @Test
+    fun `observeRange re-emits when a matching event is inserted`() = runBlocking {
+        val emissions = mutableListOf<List<SwipeEvent>>()
+        val job = launch { repo.observeRange(1_000L, 2_000L).take(2).toList(emissions) }
+        withTimeout(5_000) { while (emissions.isEmpty()) delay(10) }
+        repo.insert(1_500L, "A")
+        withTimeout(5_000) { job.join() }
+
+        assertEquals(2, emissions.size)
+        assertEquals(emptyList<SwipeEvent>(), emissions[0])
+        assertEquals(listOf("A"), emissions[1].map { it.detail })
+    }
+
     // ---- delete ----
 
     @Test

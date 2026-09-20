@@ -22,6 +22,13 @@ module: record
 - [x] 插入相同 swipedAt 的 2 条事件，id 大的排前面
 - [x] 插入新事件后 Flow 自动发射更新后的列表
 
+### observeRange
+- [x] 只返回 `[fromInclusive, toExclusive)` 区间内的事件
+- [x] 下界含：swipedAt == fromInclusive 命中；上界不含：swipedAt == toExclusive 不命中
+- [x] 区间内无事件时发射空列表
+- [x] 区间内多条事件按 swipedAt 倒序（同毫秒 id 倒序）
+- [x] 区间匹配事件插入后 Flow 自动重新发射
+
 ### delete
 - [x] 删除存在的 id 后该事件消失，其余事件不受影响
 - [x] 删除不存在的 id 不崩溃、不影响其他事件
@@ -31,11 +38,12 @@ module: record
 
 ## Integration Tests
 - [ ] 真机手动验收：杀进程重启 App 后历史记录仍在（Room 落盘）
-- [ ] 真机手动验收：HCE 服务在界面未打开时写入的事件，打开 App 后可见
+- [ ] 真机手动验收：detector 服务在界面未打开时写入的事件，打开 App 后日历对应日期出现标记
 
 ## Invariants（不变量）
 - `detail` 永不为空白，`swipedAt` 永远 `> 0`（插入前强制校验）
 - `id` 全局唯一且自增
-- `observeAll` 返回的列表永远按 swipedAt 倒序（同毫秒按 id 倒序）
+- `observeAll` / `observeRange` 返回的列表永远按 swipedAt 倒序（同毫秒按 id 倒序）
+- `observeRange` 区间语义恒为 `[fromInclusive, toExclusive)`（下界含、上界不含）
 - 记录一旦插入不可被修改（接口不提供 update）
 - `get()` 单例与 `create()` 新实例指向同一数据库文件时，写入对彼此可见（Room 表失效通知）

@@ -34,6 +34,12 @@ class WalletSwipeDetectorServiceTest {
         }
 
         override fun observeAll(): Flow<List<SwipeEvent>> = events
+
+        override fun observeRange(fromInclusive: Long, toExclusive: Long): Flow<List<SwipeEvent>> =
+            kotlinx.coroutines.flow.flow {
+                emit(events.value.filter { it.swipedAt >= fromInclusive && it.swipedAt < toExclusive })
+            }
+
         override suspend fun delete(id: Long) = Unit
         override suspend fun clear() = Unit
     }

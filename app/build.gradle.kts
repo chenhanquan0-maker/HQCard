@@ -21,8 +21,6 @@ android {
     sourceSets {
         getByName("main") {
             java.srcDirs(
-                "../modules/nfc/impl/src/main/java",
-                "../modules/hce/impl/src/main/java",
                 "../modules/detector/impl/src/main/java",
                 "../modules/record/impl/src/main/java",
                 "../modules/app_shell/impl/src/main/java",
@@ -30,8 +28,6 @@ android {
         }
         getByName("test") {
             java.srcDirs(
-                "../modules/nfc/impl/src/test/java",
-                "../modules/hce/impl/src/test/java",
                 "../modules/detector/impl/src/test/java",
                 "../modules/record/impl/src/test/java",
                 "../modules/app_shell/impl/src/test/java",

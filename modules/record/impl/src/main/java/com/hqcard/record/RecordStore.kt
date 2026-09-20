@@ -17,6 +17,12 @@ interface SwipeEventDao {
     @Query("SELECT * FROM swipe_events ORDER BY swipedAt DESC, id DESC")
     fun observeAll(): Flow<List<SwipeEvent>>
 
+    @Query(
+        "SELECT * FROM swipe_events WHERE swipedAt >= :fromInclusive AND swipedAt < :toExclusive " +
+            "ORDER BY swipedAt DESC, id DESC",
+    )
+    fun observeRange(fromInclusive: Long, toExclusive: Long): Flow<List<SwipeEvent>>
+
     @Query("DELETE FROM swipe_events WHERE id = :id")
     suspend fun deleteById(id: Long)
 
@@ -43,6 +49,9 @@ internal class RoomSwipeEventRepository(
 
     override fun observeAll(): Flow<List<SwipeEvent>> = dao.observeAll()
 
+    override fun observeRange(fromInclusive: Long, toExclusive: Long): Flow<List<SwipeEvent>> =
+        dao.observeRange(fromInclusive, toExclusive)
+
     override suspend fun delete(id: Long) = dao.deleteById(id)
 
     override suspend fun clear() = dao.clearAll()
@@ -55,7 +64,7 @@ object SwipeRecordStore {
     private var instance: SwipeEventRepository? = null
 
     /**
-     * 进程级单例：HCE 服务与 UI 共享同一 Room 实例，
+     * 进程级单例：detector 服务与 UI 共享同一 Room 实例，
      * 保证服务写入后 UI 的 Flow 立即收到更新。
      */
     fun get(context: Context): SwipeEventRepository =

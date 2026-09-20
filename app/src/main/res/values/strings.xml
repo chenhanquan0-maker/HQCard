@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">HQCard</string>
-    <string name="hce_service_desc">HQCard 虚拟卡：贴近读卡器时记录刷卡时间</string>
-    <string name="hce_aid_desc">HQCard 刷卡记录虚拟卡</string>
     <string name="detector_service_desc">双击电源唤出小米门卡界面时，记录刷卡时间（仅观测界面出现，不读取任何内容）</string>
 </resources>

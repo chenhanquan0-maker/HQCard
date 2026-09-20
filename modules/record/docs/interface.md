@@ -33,6 +33,17 @@ module: record
 #### observeAll() → Flow<List<SwipeEvent>>
 返回全部事件的实时流，**按 `swipedAt` 倒序（新→旧），同一毫秒按 `id` 倒序**。数据库变更时自动重新发射。
 
+#### observeRange(fromInclusive: Long, toExclusive: Long) → Flow<List<SwipeEvent>>
+返回 **`swipedAt ∈ [fromInclusive, toExclusive)`**（下界含、上界不含）事件的实时流，
+排序与 `observeAll` 一致（`swipedAt` 倒序，同毫秒 `id` 倒序）。数据库变更时自动重新发射。
+供日历界面按天/按月筛选使用。
+
+**Parameters:**
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| fromInclusive | Long | 是 | 区间下界（含），epoch 毫秒 |
+| toExclusive | Long | 是 | 区间上界（不含），epoch 毫秒 |
+
 #### delete(id: Long) (suspend)
 删除指定 id 的事件；id 不存在时为空操作。
 
@@ -40,14 +51,18 @@ module: record
 删除全部事件。
 
 ### object SwipeRecordStore
-- `get(context: Context): SwipeEventRepository` — 进程级单例（HCE 服务与 UI 共享，保证服务写入后 UI 立即刷新）
+- `get(context: Context): SwipeEventRepository` — 进程级单例（detector 服务与 UI 共享，保证服务写入后 UI 立即刷新）
 - `create(context: Context): SwipeEventRepository` — 每次新建（测试用），数据库文件 `hqcard.db`，`fallbackToDestructiveMigration`
 
 **Usage Example:**
 ```kotlin
 val repo = SwipeRecordStore.get(context)
-val saved = repo.insert(System.currentTimeMillis(), "读卡器选中本机虚拟卡")
+val saved = repo.insert(System.currentTimeMillis(), "小米钱包刷卡（卡片界面唤出）")
 repo.observeAll().collect { list -> /* 渲染列表 */ }
+// 日历按天筛选：
+val dayStart = date.atStartOfDay(zone).toInstant().toEpochMilli()
+val dayEnd = date.plusDays(1).atStartOfDay(zone).toInstant().toEpochMilli()
+repo.observeRange(dayStart, dayEnd).collect { dayEvents -> /* 渲染当天记录 */ }
 ```
 
 ## Storage

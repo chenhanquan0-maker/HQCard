@@ -22,6 +22,9 @@ interface SwipeEventRepository {
     /** 全部事件的实时流：swipedAt 倒序，同毫秒 id 倒序 */
     fun observeAll(): Flow<List<SwipeEvent>>
 
+    /** 区间 [fromInclusive, toExclusive) 内事件的实时流：swipedAt 倒序，同毫秒 id 倒序（日历按天/按月筛选） */
+    fun observeRange(fromInclusive: Long, toExclusive: Long): Flow<List<SwipeEvent>>
+
     /** 删除指定 id；不存在时为空操作 */
     suspend fun delete(id: Long)
 
